@@ -1,10 +1,14 @@
 import java.util.Scanner;
 
+/*
+inserting position must be separated by ',',like a,b
+positions counting start from 0
+ */
 public class TicTac {
     public static int fstPlayerWinCount = 0;
     public static int secPlayerWinCount = 0;
     public static String fstPlayerName = "";
-    public static String scdPlayerNmae = "";
+    public static String scdPlayerName = "";
 
     public static void main(String[] args) {
         int gameCount;
@@ -37,7 +41,7 @@ public class TicTac {
             oneGame();
         }
         System.out.println(fstPlayerName + "'s score is " + fstPlayerWinCount);
-        System.out.println(scdPlayerNmae + "'s score is " + secPlayerWinCount);
+        System.out.println(scdPlayerName + "'s score is " + secPlayerWinCount);
     }
 
     public static void oneGame() {
@@ -49,7 +53,9 @@ public class TicTac {
         String pos1;
         String pos2;
         fstPlayerName = game.firstPlayerName;
-        scdPlayerNmae = game.secondPlayerName;
+        scdPlayerName = game.secondPlayerName;
+        int fstStepCounts = 0;
+        int scdStepCounts = 0;
         /*
         At worst case(if we haven't a winner) we insert positions boarsSize*boardSize time
          */
@@ -58,6 +64,7 @@ public class TicTac {
             for interrupted when we have winner
              */
             if (!play.check(board, game.winCnd)) {
+                fstStepCounts++;
                 do {
                     System.out.println("It's " + game.firstPlayerName + "'s order");
                     play.printBoard(board);
@@ -75,11 +82,12 @@ public class TicTac {
                 while (!play.input(board, Integer.valueOf(pos1), Integer.valueOf(pos2), 0));
                 play.printBoard(board);
             } else {
-                System.out.println(game.secondPlayerName + " is winner");
+                System.out.println(game.secondPlayerName + " is winner, steps count is " + scdStepCounts);
                 secPlayerWinCount++;
                 break;
             }
             if (!play.check(board, game.winCnd)) {
+                scdStepCounts++;
                 do {
                     System.out.println("It's " + game.secondPlayerName + "'s order");
                     play.printBoard(board);
@@ -94,7 +102,7 @@ public class TicTac {
                 while (!play.input(board, Integer.valueOf(pos1), Integer.valueOf(pos2), 1));
                 play.printBoard(board);
             } else {
-                System.out.println(game.firstPlayerName + " is winner");
+                System.out.println(game.firstPlayerName + " is winner, steps count is " + fstStepCounts);
                 fstPlayerWinCount++;
                 break;
             }
@@ -110,7 +118,7 @@ public class TicTac {
             If position don't separated with ',', work this case
              */
             case 1:
-                System.out.println("Please separate position with ,");
+                System.out.println("Please separate position with ','");
                 return false;
                 /*
             If position  separated with one ',', work this case
