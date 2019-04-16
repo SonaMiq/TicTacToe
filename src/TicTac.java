@@ -34,7 +34,7 @@ public class TicTac {
         inserting integer game count must be >=1
          */
         while (gameCount < 1) {
-            System.out.println("Game count must be more one");
+            System.out.println("Game count must be one or more");
             gameCount = sc.nextInt();
         }
         for (int i = 0; i < gameCount; i++) {
@@ -56,55 +56,68 @@ public class TicTac {
         scdPlayerName = game.secondPlayerName;
         int fstStepCounts = 0;
         int scdStepCounts = 0;
-        /*
-        At worst case(if we haven't a winner) we insert positions boarsSize*boardSize time
-         */
         for (int i = 0; i < game.boardSize * game.boardSize; i++) {
+            /*
+            check if all positions selected and haven't winner
+             */
+            if (play.fullBoard(board)) {
+                System.out.println("Stand Off");
+                break;
+            } else {
             /*
             for interrupted when we have winner
              */
-            if (!play.check(board, game.winCnd)) {
-                fstStepCounts++;
-                do {
-                    System.out.println("It's " + game.firstPlayerName + "'s order");
-                    play.printBoard(board);
+                if (!play.check(board, game.winCnd)) {
+                    fstStepCounts++;
                     do {
-                        System.out.println("Insert position");
-                        pos = scanner.next().split(",");
+                        System.out.println("It's " + game.firstPlayerName + "'s order");
+                        play.printBoard(board);
+                        do {
+                            System.out.println("Insert position");
+                            pos = scanner.next().split(",");
+                        }
+                        while (!readInput(pos, game.boardSize));
+                        pos1 = pos[0];
+                        pos2 = pos[1];
                     }
-                    while (!readInput(pos, game.boardSize));
-                    pos1 = pos[0];
-                    pos2 = pos[1];
-                }
                 /*
                 this part check, if we select existing position
                  */
-                while (!play.input(board, Integer.valueOf(pos1), Integer.valueOf(pos2), 0));
-                play.printBoard(board);
-            } else {
-                System.out.println(game.secondPlayerName + " is winner, steps count is " + scdStepCounts);
-                secPlayerWinCount++;
-                break;
-            }
-            if (!play.check(board, game.winCnd)) {
-                scdStepCounts++;
-                do {
-                    System.out.println("It's " + game.secondPlayerName + "'s order");
+                    while (!play.input(board, Integer.valueOf(pos1), Integer.valueOf(pos2), 0));
                     play.printBoard(board);
-                    do {
-                        System.out.println("Insert position");
-                        pos = scanner.next().split(",");
-                    }
-                    while (!readInput(pos, game.boardSize));
-                    pos1 = pos[0];
-                    pos2 = pos[1];
+                } else {
+                    System.out.println(game.secondPlayerName + " is winner, steps count is " + scdStepCounts);
+                    secPlayerWinCount++;
+                    break;
                 }
-                while (!play.input(board, Integer.valueOf(pos1), Integer.valueOf(pos2), 1));
-                play.printBoard(board);
-            } else {
-                System.out.println(game.firstPlayerName + " is winner, steps count is " + fstStepCounts);
-                fstPlayerWinCount++;
+            }
+             /*
+            check if all positions selected and haven't winner
+             */
+            if (play.fullBoard(board)) {
+                System.out.println("Stand Off");
                 break;
+            } else {
+                if (!play.check(board, game.winCnd)) {
+                    scdStepCounts++;
+                    do {
+                        System.out.println("It's " + game.secondPlayerName + "'s order");
+                        play.printBoard(board);
+                        do {
+                            System.out.println("Insert position");
+                            pos = scanner.next().split(",");
+                        }
+                        while (!readInput(pos, game.boardSize));
+                        pos1 = pos[0];
+                        pos2 = pos[1];
+                    }
+                    while (!play.input(board, Integer.valueOf(pos1), Integer.valueOf(pos2), 1));
+                    play.printBoard(board);
+                } else {
+                    System.out.println(game.firstPlayerName + " is winner, steps count is " + fstStepCounts);
+                    fstPlayerWinCount++;
+                    break;
+                }
             }
         }
     }
@@ -149,7 +162,6 @@ public class TicTac {
                     return true;
             default:
                 return false;
-
         }
     }
 }

@@ -12,9 +12,10 @@ public class TicTacToeConfig {
     public int boardSize;
     public int winCnd;
     public int[][] board;
-/*
-Player names must configured only in start
- */
+
+    /*
+    Player names must configured only in start
+     */
     static {
         Scanner sc = new Scanner(System.in);
         System.out.println("Insert first player name: X");
@@ -26,13 +27,34 @@ Player names must configured only in start
     TicTacToeConfig() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Insert board size");
-        boardSize = sc.nextInt();
+        boolean error;
+        do {
+            error = false;
+            try {
+                sc = new Scanner(System.in);
+                boardSize = sc.nextInt();
+            } catch (Exception e) {
+                System.out.println("Please insert correct size");
+                error = true;
+            }
+        }
+        while (error);
         while (boardSize % 2 == 0 || boardSize <= 1) {
             System.out.println("Please insert correct size");
             boardSize = sc.nextInt();
         }
         System.out.println("Insert winning condition");
-        winCnd = sc.nextInt();
+        do {
+            error = false;
+            try {
+                sc = new Scanner(System.in);
+                winCnd = sc.nextInt();
+            } catch (Exception e) {
+                System.out.println("Please insert correct condition");
+                error = true;
+            }
+        }
+        while (error);
         while (winCnd <= 2 || winCnd > boardSize) {
             System.out.println("Please insert correct condition");
             winCnd = sc.nextInt();

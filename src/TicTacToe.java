@@ -1,4 +1,5 @@
 public class TicTacToe {
+
     /*
     This method input X or O, if this position is empty
      */
@@ -12,10 +13,22 @@ public class TicTacToe {
         }
     }
 
+/*
+This method check is all board positions selected
+ */
+    public boolean fullBoard(int[][] brd) {
+        for (int i = 0; i < brd.length ; i++) {
+            for (int j = 0; j < brd.length ; j++)
+                if (brd[i][j] == 2)
+                    return false;
+        }
+        return true;
+    }
+
     /*
-    This method check the presence of elements that are next to each other,
-    if count of this elements >= winner condition, we have winner
-     */
+  This method check the presence of elements that are next to each other,
+  if count of this elements >= winner condition, we have winner
+   */
     public boolean check(int[][] positions, int winPosCount) {
         /*
         Check X or O next to each other count in row
