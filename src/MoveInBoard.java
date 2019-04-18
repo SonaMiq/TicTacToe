@@ -1,9 +1,9 @@
-public class TicTacToe {
+public class MoveInBoard {
 
     /*
     This method input X or O, if this position is empty
      */
-    public boolean input(int[][] brd, int cord1, int cord2, int xOro) {
+    public boolean inputInBoard(int[][] brd, int cord1, int cord2, int xOro) {
         if (brd[cord1][cord2] == 2) {
             brd[cord1][cord2] = xOro;
             return true;
@@ -13,12 +13,12 @@ public class TicTacToe {
         }
     }
 
-/*
-This method check is all board positions selected
- */
-    public boolean fullBoard(int[][] brd) {
-        for (int i = 0; i < brd.length ; i++) {
-            for (int j = 0; j < brd.length ; j++)
+    /*
+    This method check is all board positions selected
+     */
+    public boolean checkFullBoard(int[][] brd) {
+        for (int i = 0; i < brd.length; i++) {
+            for (int j = 0; j < brd.length; j++)
                 if (brd[i][j] == 2)
                     return false;
         }
@@ -29,7 +29,7 @@ This method check is all board positions selected
   This method check the presence of elements that are next to each other,
   if count of this elements >= winner condition, we have winner
    */
-    public boolean check(int[][] positions, int winPosCount) {
+    public boolean findTheWinner(int[][] positions, int winPosCount) {
         /*
         Check X or O next to each other count in row
          */
@@ -55,6 +55,7 @@ This method check is all board positions selected
             if (k >= winPosCount - 1)
                 return true;
         }
+
          /*
         Check X or O next to each other count in diagonal
          */
@@ -79,28 +80,8 @@ This method check is all board positions selected
         }
         return false;
     }
-
-    /*
-    This method print board elements.
-     */
-    public void printBoard(int[][] position) {
-        for (int i = 0; i < position.length; i++) {
-            for (int j = 0; j < position.length; j++) {
-                switch (position[i][j]) {
-                    case 0:
-                        System.out.print("X" + " ");
-                        break;
-                    case 1:
-                        System.out.print("O" + " ");
-                        break;
-                    case 2:
-                        System.out.print("." + " ");
-                }
-            }
-            System.out.println(" ");
-        }
-    }
 }
+
 
 
 
