@@ -5,133 +5,150 @@ inserting position must be separated by ',',like a,b
 positions counting start from 0
  */
 public class TicTacToeMain {
-    public static int fstPlayerWinCount = 0;
-    public static int secPlayerWinCount = 0;
-    public static String fstPlayerName = "";
-    public static String scdPlayerName = "";
+    private static String firstPlayerName;
+    private static String secondPlayerName;
+    private static int boardSize;
+    private static int winCnd;
+    private static int[][] board;
 
-    public static void main(String[] args) {
-        int gameCount;
+    static {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Insert games count");
-        boolean error = false;
-        /*
-        check if inserting game count not integer
-         */
-        do {
-            try {
-                gameCount = sc.nextInt();
-                error = false;
-            } catch (Exception e) {
-                System.out.println("Please insert correct count");
-                sc = new Scanner(System.in);
-                error = true;
-                gameCount = 0;
-            }
-        }
-        while (error);
-         /*
-        inserting integer game count must be >=1
-         */
-        while (gameCount < 1) {
-            System.out.println("Game count must be one or more");
-            gameCount = sc.nextInt();
-        }
-        for (int i = 0; i < gameCount; i++) {
-            oneGame();
-        }
-        System.out.println(fstPlayerName + "'s score is " + fstPlayerWinCount);
-        System.out.println(scdPlayerName + "'s score is " + secPlayerWinCount);
+        System.out.println("Insert first player name: X");
+        firstPlayerName = sc.next();
+        System.out.println("Insert Second player name: O");
+        secondPlayerName = sc.next();
     }
 
-    public static void oneGame() {
-        TicTacToeConfig game = new TicTacToeConfig();
-        TicTacToe play = new TicTacToe();
+    private static MoveInBoard moveInBoard = new MoveInBoard();
+    private static int fstPlayerWinCount = 0;
+    private static int secPlayerWinCount = 0;
+
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Insert games count");
+        int gameCount = checkInputErrors("Please insert correct count");
+        while (gameCount < 1) {
+            System.out.println("Game count must be one or more");
+            gameCount = checkInputErrors("Please insert correct count");
+        }
+        for (int i = 0; i < gameCount; i++) {
+            newGame();
+        }
+        System.out.println(firstPlayerName + "'s score is " + fstPlayerWinCount);
+        System.out.println(secondPlayerName + "'s score is " + secPlayerWinCount);
+    }
+
+    /*
+   Configuration parameters for game begin
+   */
+    private static void config() {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Insert board size");
+        boardSize = checkInputErrors("Please insert correct board size");
+        while (boardSize % 2 == 0 || boardSize <= 1) {
+            System.out.println("Board size must be uneven number that more one");
+            boardSize = checkInputErrors("Please insert correct board size");
+        }
+        System.out.println("Insert winning condition");
+        winCnd = checkInputErrors("Please insert correct condition");
+        while (winCnd <= 2 || winCnd > boardSize) {
+            System.out.println("Condition must be more or equal to two and no more than board size");
+            winCnd = checkInputErrors("Please insert correct condition");
+        }
+        /*
+        Empty board configuration
+         */
+        board = new int[boardSize][boardSize];
+        for (int i = 0; i < boardSize; i++)
+            for (int j = 0; j < boardSize; j++)
+                board[i][j] = 2;
+    }
+
+    private static void newGame() {
+        config();
         Scanner scanner = new Scanner(System.in);
-        int[][] board = game.board;
-        String[] pos;
-        String pos1;
-        String pos2;
-        fstPlayerName = game.firstPlayerName;
-        scdPlayerName = game.secondPlayerName;
-        int fstStepCounts = 0;
-        int scdStepCounts = 0;
-        for (int i = 0; i < game.boardSize * game.boardSize; i++) {
-            /*
-            check if all positions selected and haven't winner
+        int fstPlayerStepCounts = 0;
+        int scdPlayerStepCounts = 0;
+          /*
+            for interrupted when we have winner or board is full (Stand Off)
              */
-            if (play.fullBoard(board)) {
-                System.out.println("Stand Off");
-                break;
-            } else {
+        for (int i = 0; i < boardSize * boardSize; i++) {
             /*
-            for interrupted when we have winner
+            Check board state: if haven't the winner, first player do step
              */
-                if (!play.check(board, game.winCnd)) {
-                    fstStepCounts++;
-                    do {
-                        System.out.println("It's " + game.firstPlayerName + "'s order");
-                        play.printBoard(board);
-                        do {
-                            System.out.println("Insert position");
-                            pos = scanner.next().split(",");
-                        }
-                        while (!readInput(pos, game.boardSize));
-                        pos1 = pos[0];
-                        pos2 = pos[1];
-                    }
-                /*
-                this part check, if we select existing position
+            if (!moveInBoard.findTheWinner(board, winCnd)) {
+                fstPlayerStepCounts++;
+                playerStep(firstPlayerName, 0);
+                 /*
+                 check if all positions selected and haven't winner
                  */
-                    while (!play.input(board, Integer.valueOf(pos1), Integer.valueOf(pos2), 0));
-                    play.printBoard(board);
-                } else {
-                    System.out.println(game.secondPlayerName + " is winner, steps count is " + scdStepCounts);
-                    secPlayerWinCount++;
+                if (moveInBoard.checkFullBoard(board)) {
+                    System.out.println("Stand Off");
                     break;
                 }
-            }
-             /*
-            check if all positions selected and haven't winner
-             */
-            if (play.fullBoard(board)) {
-                System.out.println("Stand Off");
-                break;
-            } else {
-                if (!play.check(board, game.winCnd)) {
-                    scdStepCounts++;
-                    do {
-                        System.out.println("It's " + game.secondPlayerName + "'s order");
-                        play.printBoard(board);
-                        do {
-                            System.out.println("Insert position");
-                            pos = scanner.next().split(",");
+                else {
+                       /*
+                      Check board state: if haven't the winner, second player do step
+                        */
+                    if (!moveInBoard.findTheWinner(board, winCnd)) {
+                        scdPlayerStepCounts++;
+                        playerStep(secondPlayerName, 1);
+                        if (moveInBoard.checkFullBoard(board)) {
+                            System.out.println("Stand Off");
+                            break;
                         }
-                        while (!readInput(pos, game.boardSize));
-                        pos1 = pos[0];
-                        pos2 = pos[1];
                     }
-                    while (!play.input(board, Integer.valueOf(pos1), Integer.valueOf(pos2), 1));
-                    play.printBoard(board);
-                } else {
-                    System.out.println(game.firstPlayerName + " is winner, steps count is " + fstStepCounts);
-                    fstPlayerWinCount++;
-                    break;
+                    else {
+                        System.out.println(firstPlayerName + " is winner, steps count is " + fstPlayerStepCounts);
+                        fstPlayerWinCount++;
+                        break;
+                    }
                 }
+
+            } else {
+                System.out.println(secondPlayerName + " is winner, steps count is " + scdPlayerStepCounts);
+                secPlayerWinCount++;
+                break;
             }
         }
+    }
+
+    private static void playerStep(String playerName, int xOro) {
+        String[] position;
+        String position1;
+        String position2;
+        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.println("It's " + playerName + "'s order");
+            printBoard(board);
+            do {
+                System.out.println("Insert position");
+                position = scanner.next().split(",");
+            }
+            while (!checkInputPosition(position, boardSize));
+            position1 = position[0];
+            position2 = position[1];
+        }
+                /*
+                this part check, are player select existing position
+                 */
+        while (!moveInBoard.inputInBoard(board, Integer.valueOf(position1), Integer.valueOf(position2), xOro));
+        printBoard(board);
     }
 
     /*
     This method check correct of inputting position
      */
-    public static boolean readInput(String[] posit, int boardSize) {
+    private static boolean checkInputPosition(String[] posit, int boardSize) {
         switch (posit.length) {
             /*
             If position don't separated with ',', work this case
              */
             case 1:
-                System.out.println("Please separate position with ','");
+                System.out.println("Please insert position separated by ',': Position1,Position2,");
                 return false;
                 /*
             If position  separated with one ',', work this case
@@ -142,11 +159,6 @@ public class TicTacToeMain {
                  */
                 try {
                     Integer.valueOf(posit[0]);
-                } catch (Exception e) {
-                    System.out.println("Please insert correct position");
-                    return false;
-                }
-                try {
                     Integer.valueOf(posit[1]);
                 } catch (Exception e) {
                     System.out.println("Please insert correct position");
@@ -155,15 +167,62 @@ public class TicTacToeMain {
                 /*
                 Check separated integers values
                  */
-                if (Integer.valueOf(posit[0]) < 0 || Integer.valueOf(posit[0]) >= boardSize || Integer.valueOf(posit[1]) < 0 || Integer.valueOf(posit[1]) >= boardSize) {
-                    System.out.println("Please insert correct position");
+                if (Integer.valueOf(posit[0]) >= boardSize || Integer.valueOf(posit[1]) >= boardSize) {
+                    System.out.println("Positions should not be more than board size");
+                    return false;
+                } else if (Integer.valueOf(posit[0]) < 0 || Integer.valueOf(posit[1]) < 0) {
+                    System.out.println("Positions should  be more than zero");
                     return false;
                 } else
                     return true;
+
             default:
                 return false;
         }
     }
+
+    /*
+    This method print board elements.
+     */
+    private static void printBoard(int[][] position) {
+        for (int i = 0; i < position.length; i++) {
+            for (int j = 0; j < position.length; j++) {
+                switch (position[i][j]) {
+                    case 0:
+                        System.out.print("X" + " ");
+                        break;
+                    case 1:
+                        System.out.print("O" + " ");
+                        break;
+                    case 2:
+                        System.out.print("." + " ");
+                }
+            }
+            System.out.println(" ");
+        }
+    }
+
+    /*
+    This method check errors that arise when inputting wrong data
+     */
+    private static int checkInputErrors(String errorMessage) {
+        boolean error = false;
+        int inputValue = 0;
+        do {
+            try {
+                error = false;
+                Scanner sc = new Scanner(System.in);
+                inputValue = sc.nextInt();
+            } catch (Exception e) {
+                System.out.println(errorMessage);
+                error = true;
+            }
+        }
+        while (error);
+        return inputValue;
+    }
 }
+
+
 
 
