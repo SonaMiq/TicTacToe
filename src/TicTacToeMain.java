@@ -4,7 +4,7 @@ import java.util.Scanner;
 inserting position must be separated by ',',like a,b
 positions counting start from 0
  */
-public class TicTac {
+public class TicTacToeMain {
     public static int fstPlayerWinCount = 0;
     public static int secPlayerWinCount = 0;
     public static String fstPlayerName = "";
