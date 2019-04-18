@@ -1,4 +1,4 @@
-public class TicTacToe {
+public class MoveInBoard {
 
     /*
     This method input X or O, if this position is empty
