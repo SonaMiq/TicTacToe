@@ -30,6 +30,7 @@ public class MoveInBoard {
   if count of this elements >= winner condition, we have winner
    */
     public boolean findTheWinner(int[][] positions, int winPosCount) {
+
         /*
         Check X or O next to each other count in row
          */

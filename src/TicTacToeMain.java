@@ -88,7 +88,8 @@ public class TicTacToeMain {
                 if (moveInBoard.checkFullBoard(board)) {
                     System.out.println("Stand Off");
                     break;
-                } else {
+                }
+                else {
                        /*
                       Check board state: if haven't the winner, second player do step
                         */
@@ -99,7 +100,8 @@ public class TicTacToeMain {
                             System.out.println("Stand Off");
                             break;
                         }
-                    } else {
+                    }
+                    else {
                         System.out.println(firstPlayerName + " is winner, steps count is " + fstPlayerStepCounts);
                         fstPlayerWinCount++;
                         break;
